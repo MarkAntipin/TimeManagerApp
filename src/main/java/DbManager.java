@@ -59,9 +59,9 @@ public class DbManager {
         return connection;
     }
 
-    private static Connection setAppDatabase() {
-
-    }
+//    private static Connection setAppDatabase() {
+//
+//    }
 
     private static ResultSet executeMyQuery(String query) {
         ResultSet rs = null;
