@@ -88,11 +88,56 @@ public class DbManager {
         executeMyQuery(query);
     }
 
+    static void updateField(
+            String columnToUpdate, String  newValue, String columnWhereUpdate,
+            String rowWhereUpdate, String tableName
+    ) {
+        String query = String.format("%s%s\n%s%s%s%s%s%s\n%s\n%s%s%s%s%s",
+                "UPDATE ", tableName,
+                "SET ", columnToUpdate, " = ", "'", newValue, "'",
+                "WHERE ",
+                columnWhereUpdate, " = ", "'", rowWhereUpdate, "';"
+        );
+        executeMyQuery(query);
+    }
+
+    static String selectRecord(
+            String columnWhichSelect, String columnWhereSelect,
+            String rowWhereSelect,  String tableName
+    ) {
+        String record = "";
+        String query = String.format("%s%s\n%s%s\n%s\n%s%s%s%s%s",
+                "SELECT ", columnWhichSelect,
+                "FROM ", tableName,
+                "WHERE ",
+                columnWhereSelect, " = ", "'", rowWhereSelect, "';"
+        );
+        ResultSet rs = executeMyQuery(query);
+        try {
+            rs.next();
+            record = rs.getString(1);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return record;
+    }
 
 
     public static void main(String[] args) throws SQLException, IOException {
-//        executeMyQuery(createTypeTable);
-//        addRecordToTable("'work'", "types");
 
+//        updateField(
+//                "last_start_time",
+//                "Dec, 12, 13:21:58, 2019",
+//                "name",
+//                "Postman",
+//                "process"
+//                );
+        String record = selectRecord(
+            "last_start_time",
+            "name",
+            "Postman",
+            "process"
+        );
+        System.out.println(record);
     }
 }
