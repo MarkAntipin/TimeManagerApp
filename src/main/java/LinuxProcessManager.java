@@ -1,11 +1,10 @@
 import java.util.Arrays;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 
-public class LinuxProcessManager {
+class LinuxProcessManager {
 
     private static String executeLinuxCommand(String command) {
         Process process;
@@ -28,7 +27,7 @@ public class LinuxProcessManager {
         return executeLinuxCommand("pgrep " + program);
     }
 
-    private static String[] getTimeOfProgram(String program) {
+    static String getTimeOfProgram(String program) {
         String pidProgram =  getPidOfProgram(program);
         String time = "";
         try {
@@ -47,14 +46,10 @@ public class LinuxProcessManager {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        if (time == null || time.equals("  PID STARTED")) {
+            return " ";
+        }
         String[] timeArr = time.split(" ");
-        return Arrays.copyOfRange(timeArr, 2, timeArr.length);
-    }
-
-
-    public static void main(String[] args) throws IOException {
-        System.out.println(Arrays.toString(getTimeOfProgram("pycharm")));
-//        getTimeOfProgram("pycharm");
-
+        return Arrays.toString(Arrays.copyOfRange(timeArr, 2, timeArr.length));
     }
 }

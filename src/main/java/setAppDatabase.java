@@ -34,7 +34,7 @@ public class setAppDatabase {
                 for (Object process: processes) {
                     StringBuilder record = new StringBuilder();
                     record.append("'").append(process.toString()).append("'");
-                    record.append(", ").append("null ");
+                    record.append(", ").append("' '");
                     record.append(", ").append("0 ");
                     record.append(", ").append("'").append(type).append("'");
                     DbManager.addRecordToTable(record.toString(), "process");

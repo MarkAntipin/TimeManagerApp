@@ -9,9 +9,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 
-
-
-public class DbManager {
+class DbManager {
 
     static String makeConfigPath(String configName) {
         String workingDirectory = System.getProperty("user.dir");
@@ -40,7 +38,6 @@ public class DbManager {
         }
         Class.forName(driver);
         Connection connection = DriverManager.getConnection(host, username, password);
-        System.out.println("Connected to database!");
         return connection;
     }
 
@@ -122,22 +119,23 @@ public class DbManager {
         return record;
     }
 
+    static ArrayList<String> selectColumn(String columnWhichSelect, String tableName) {
+        ArrayList<String> records = new ArrayList<String>();
 
-    public static void main(String[] args) throws SQLException, IOException {
-
-//        updateField(
-//                "last_start_time",
-//                "Dec, 12, 13:21:58, 2019",
-//                "name",
-//                "Postman",
-//                "process"
-//                );
-        String record = selectRecord(
-            "last_start_time",
-            "name",
-            "Postman",
-            "process"
+        String query = String.format("%s%s\n%s%s%s",
+                "SELECT ", columnWhichSelect,
+                "FROM ", tableName, ";"
         );
-        System.out.println(record);
+
+        ResultSet rs = executeMyQuery(query);
+
+        try {
+            while (rs.next())
+                records.add(rs.getString(1));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return records;
     }
 }
