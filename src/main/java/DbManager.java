@@ -9,9 +9,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 
-
-
-public class DbManager {
+class DbManager {
 
     static String makeConfigPath(String configName) {
         String workingDirectory = System.getProperty("user.dir");
@@ -40,7 +38,6 @@ public class DbManager {
         }
         Class.forName(driver);
         Connection connection = DriverManager.getConnection(host, username, password);
-        System.out.println("Connected to database!");
         return connection;
     }
 
@@ -88,11 +85,57 @@ public class DbManager {
         executeMyQuery(query);
     }
 
+    static void updateField(
+            String columnToUpdate, String  newValue, String columnWhereUpdate,
+            String rowWhereUpdate, String tableName
+    ) {
+        String query = String.format("%s%s\n%s%s%s%s%s%s\n%s\n%s%s%s%s%s",
+                "UPDATE ", tableName,
+                "SET ", columnToUpdate, " = ", "'", newValue, "'",
+                "WHERE ",
+                columnWhereUpdate, " = ", "'", rowWhereUpdate, "';"
+        );
+        executeMyQuery(query);
+    }
 
+    static String selectRecord(
+            String columnWhichSelect, String columnWhereSelect,
+            String rowWhereSelect,  String tableName
+    ) {
+        String record = "";
+        String query = String.format("%s%s\n%s%s\n%s\n%s%s%s%s%s",
+                "SELECT ", columnWhichSelect,
+                "FROM ", tableName,
+                "WHERE ",
+                columnWhereSelect, " = ", "'", rowWhereSelect, "';"
+        );
+        ResultSet rs = executeMyQuery(query);
+        try {
+            rs.next();
+            record = rs.getString(1);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return record;
+    }
 
-    public static void main(String[] args) throws SQLException, IOException {
-//        executeMyQuery(createTypeTable);
-//        addRecordToTable("'work'", "types");
+    static ArrayList<String> selectColumn(String columnWhichSelect, String tableName) {
+        ArrayList<String> records = new ArrayList<String>();
 
+        String query = String.format("%s%s\n%s%s%s",
+                "SELECT ", columnWhichSelect,
+                "FROM ", tableName, ";"
+        );
+
+        ResultSet rs = executeMyQuery(query);
+
+        try {
+            while (rs.next())
+                records.add(rs.getString(1));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return records;
     }
 }
